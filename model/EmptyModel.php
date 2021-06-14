@@ -83,21 +83,72 @@ function adduser($email, $pas, $tel, $name){
 		$err[3] = 'U moet een username invoeren';
 	}
 	if(!empty($name) && !empty($tel) && !empty($pas) && !empty($email)){
-	$email = diffuser($email);
-	$pas = diffuser($pas);
-	$tel = diffuser($tel);
-	$name = diffuser($name);
+		if(!empty(checkaccount($email))){
+			$email = diffuser($email);
+			$pas = diffuser($pas);
+			$tel = diffuser($tel);
+			$name = diffuser($name);
 
-	$conn=openDatabaseConnection();
-	$stmt = $conn->prepare("INSERT INTO login (email,password, tel, username) VALUES (:email,:password,:tel,:username)");
-	$stmt->bindParam(":email", $email);
-	$stmt->bindParam(":password", $pas);
-	$stmt->bindParam(":tel", $tel);
-	$stmt->bindParam(":username", $name);
-	$stmt->execute();
+			$conn=openDatabaseConnection();
+			$stmt = $conn->prepare("INSERT INTO login (email,password, tel, username) VALUES (:email,:password,:tel,:username)");
+			$stmt->bindParam(":email", $email);
+			$stmt->bindParam(":password", $pas);
+			$stmt->bindParam(":tel", $tel);
+			$stmt->bindParam(":username", $name);
+			$stmt->execute();
+			$conn = null;
+
+			setcookie('login', $email, time()+6*24*60*60);
+			header("location:index");
+		}else{
+			return $err;
+		}
+	}
+}
+
+function sendlogin($email, $password){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT `email`, `password` FROM login WHERE email = :email");
+		$stmt->bindParam(":email", $email);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
 	$conn = null;
+	if(!empty($password) && !empty($email)){
+		if($result['password'] == $password){
+			setcookie('login', $email, time()+6*24*60*60);
+			header("location:index");
+		}else{
+			$err[0] = 'incorrect email or password';
+			return $err;
+		}
 	}else{
+		$err[0] = 'incorrect email or password';
 		return $err;
 	}
 }
 
+function checkaccount($email){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT `email` FROM login");
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
+
+	foreach($result as $result){
+		if($result['email'] == $email){
+			$check = '1';
+			return $check;
+		}
+	}
+}

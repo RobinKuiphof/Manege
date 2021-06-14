@@ -1,11 +1,7 @@
 
 <h2 class="text-center" style="margin-top: 30px;">paard reserveren</h2>
 <form method="POST" class="col-8 m-auto" action="<?=URL?>empty/reserveren/<?=$horseid?>" >
-<div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control"name="email" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-    <small id="emailHelp" class="form-text text-muted"><?=$err[1]?></small>
-  </div>
+  <input type="hidden" class="form-control"name="email" id="email" aria-describedby="emailHelp" placeholder="Enter email" value="<?=$_COOKIE['login']?>">
   <div class="form-group">
     <label for="formGroupExampleInput">Wanneer wil je het paard reserveren</label>
     <input type="datetime-local" class="form-control" name="s_time">

@@ -30,13 +30,14 @@
 		      	<li class="nav-item">
 		        	<a class="nav-link" href="<?=URL?>empty/reserveringen">Reserveringen</a>
 		      	</li>
-				<li class="nav-item">
-		        	<a class="nav-link mr-sm-2" href="<?=URL?>empty/login">Inloggen</a>
-		      	</li>
 	    	</ul>
 			<form class="form-inline my-2 my-lg-0">
-      <a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/login">Login</a>
-    </form>
+				<?php if(empty($_COOKIE['login'])){ ?>
+      			<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/login">Login</a>
+				<?php }else{ ?>
+				<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/logout">uitloggen</a>
+				<?php } ?>
+    		</form>
 
 
 

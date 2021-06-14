@@ -22,13 +22,18 @@ function reserveren($id){
 
 	$connection = checkConnection();
 	render('empty/reserveren', array('horseid' => $id));
-}
+}               
 
 function reserveringen(){
     render('empty/reserveringen', array('reservering' => getreserveringen()));
 }
 function login(){
-    render('empty/login');
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $err = sendlogin($email,$password);
+    }
+    render('empty/login', array('err' => $err));
 }
 
 function signup(){
@@ -42,4 +47,9 @@ function signup(){
         $err = adduser($email, $pas, $tel, $name);
     }
     render('empty/signup', array('err' => $err));
+}
+function logout(){
+    unset($_COOKIE['login']); 
+    setcookie('login', null, -1);
+    header("location:index?logout=succes");
 }

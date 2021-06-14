@@ -4,28 +4,28 @@
     
     <div class="form-group" >
       <label for="exampleDropdownFormEmail1">Username</label>
-      <input name="name" type="text" class="form-control" id="username" placeholder="Bijvoorbeeld: Jan appelboom">
-      <div class="invalid-feedback d-block"><?=$err[2]?></div>
+      <input name="name" type="text" class="form-control" id="username" placeholder="Bijvoorbeeld: Jan appelboom" value='<?=$_POST['name']?>'>
+      <div class="invalid-feedback d-block"><?=$err[3]?></div>
 
     </div>
     
     <div class="form-group row">
   <label for="example-tel-input" class="col-2 col-form-label">Telefoon</label>
   <div class="col-10">
-    <input name="tel" class="form-control" type="tel"  id="tel" placeholder="Bijvoorbeeld: 06-12345678">
-    <div class="invalid-feedback d-block"><?=$err[3]?></div>
+    <input name="tel" class="form-control" type="tel"  id="tel" placeholder="Bijvoorbeeld: 06-12345678" value='<?=$_POST['tel']?>'>
+    <div class="invalid-feedback d-block"><?=$err[2]?></div>
 
   </div>
 </div>
 <div class="form-group" >
       <label for="exampleDropdownFormEmail1">Email address</label>
-      <input name="email" type="email" class="form-control" id="email" placeholder="Bijvoorbeeld Jan.Appelboom@gmail.com">
+      <input name="email" type="email" class="form-control" id="email" placeholder="Bijvoorbeeld Jan.Appelboom@gmail.com" value='<?=$_POST['email']?>'>
       <div class="invalid-feedback d-block"><?=$err[0]?></div>
 
     </div>
     <div class="form-group">
       <label for="exampleDropdownFormPassword1">Password</label>
-      <input name="pas" type="password" class="form-control" id="password" placeholder="Bijvoorbeeld: Boerderij123">
+      <input name="pas" type="password" class="form-control" id="password" placeholder="Bijvoorbeeld: Boerderij123" value='<?=$_POST['pas']?>'>
       <div class="invalid-feedback d-block"><?=$err[1]?></div>
 
     </div>
