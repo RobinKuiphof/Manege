@@ -54,3 +54,36 @@ function logout(){
     setcookie('login', null, -1);
     header("location:index?logout=succes");
 }
+
+function delreservering($id){
+    deletereservering($id);
+    header("location:../reserveringen?delete=succesfull");  
+}
+
+function updatereservering($id){
+    $reservering = getreservering($id);
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $newbegintime = $_POST['s_time'];
+        $newduration = $_POST['options'];
+        exeupdatereservering2($newbegintime, $newduration, $id);
+    }
+    render('empty/updatereserveringen', array('reservering' => $reservering));
+}
+function addhorse(){
+    render('empty/addhorse');
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $name = $_POST['name'];
+        $des = $_POST['des'];
+        $img = $_POST['img'];
+        horseadd($name, $des, $img);
+    }   
+}
+function edithorse1($id){
+    render('empty/edithorse', array('horseinfo' => getHorse($id)));
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $name = $_POST['name'];
+        $des = $_POST['des'];
+        $img = $_POST['img'];
+        xhorseedit($name, $des, $img, $id);
+    }   
+}

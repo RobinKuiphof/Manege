@@ -36,6 +36,22 @@
 		return $result;
 	}
 
+	
+	function getHorse($id){
+	    try {
+	        $conn=openDatabaseConnection();
+	        $stmt = $conn->prepare("SELECT * FROM manage where id = :id");
+			$stmt->bindParam(":id", $id);
+	        $stmt->execute();
+	        $result = $stmt->fetchAll();
+	    }
+	   	catch(PDOException $e){
+	     	echo "Connection failed: " . $e->getMessage();
+		}
+		$conn = null;
+		return $result;
+	}
+
 	function reservering($horseid, $s_time, $e_time, $email){
 		date_default_timezone_set("Europe/Amsterdam");
 		$reserveringen = getreserveringen();
@@ -66,18 +82,36 @@
 				$stmt->bindParam(":email", $email);
 				$stmt->execute();
 				$conn = null;
+				header("location:../reserveringen");
 			}
 		}
 		return $err;
 	}
-	
+
+
 
 function getreserveringen(){
 	try {
 		$conn=openDatabaseConnection();
-		$stmt = $conn->prepare("SELECT * FROM reserveringen INNER JOIN manage ON reserveringen.horseid=manage.id");
+		$stmt = $conn->prepare("SELECT * FROM reserveringen INNER JOIN manage ON reserveringen.horseid=manage.id"); // where email = :email
+		$stmt->bindParam(":email", $_COOKIE['login']);
 		$stmt->execute();
 		$reserveringen = $stmt->fetchAll();
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
+	$conn = null;
+	return $reserveringen;
+}
+
+function getreservering($id){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT * FROM reserveringen INNER JOIN manage ON reserveringen.horseid=manage.id where orderid = :id"); 
+		$stmt->bindParam(":id", $id);
+		$stmt->execute();
+		$reserveringen = $stmt->fetch();
 	}
 	catch(PDOException $e){
 		echo "Connection failed: " . $e->getMessage();
@@ -176,12 +210,83 @@ function checkaccount($email){
 
 
 
+function deletereservering($id){
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("DELETE FROM reserveringen WHERE orderid = :id");
+	$stmt->bindParam(":id", $id);
+	$stmt->execute();
+	$conn= null;
+}
 
 
 
+function exeupdatereservering2($s_time, $e_time, $id){
+	date_default_timezone_set("Europe/Amsterdam");
+	$reserveringen = getreserveringen();
+
+	if(empty($s_time)){
+		$err[0] = 'U moet een begin tijd invoeren';
+	}elseif(date('Y-m-d H:i', strtotime($s_time)) < $currentime){
+		$err[0] = 'Selecteer een tijd die nog niet is geweest';
+	}else{
+		$end_time = date('Y-m-d H:i',strtotime('+'.$e_time.'minutes',strtotime($s_time)));
+		foreach($reserveringen as $listreserveringen){
+			if(date('Y-m-d H:i', strtotime($s_time)) < $listreserveringen['b_time'] && $end_time < $listreserveringen['b_time']){
+				
+			}elseif(date('Y-m-d H:i', strtotime($s_time)) > $listreserveringen['e_time']){
+				
+			}else{
+				$err[0] = 'Er is al een afspraak op deze tijd';
+			}
+		}
+		if(empty($err[0])){
+			$price = ($e_time/60*55);
+			$conn=openDatabaseConnection();
+			$stmt = $conn->prepare("UPDATE reserveringen SET b_time = :b_time, e_time = :e_time, price = :price WHERE orderid = :id");
+			$stmt->bindParam(":b_time", $s_time);
+			$stmt->bindParam(":e_time", $end_time);
+			$stmt->bindParam(":price", $price);
+			$stmt->bindParam(":id", $id);
+			$stmt->execute();
+			$conn = null;
+			header("location:../reserveringen?edit=succesfull");
+		}
+	}
+	return $err;
+}
+
+function horseadd($name, $des, $img){
+	$name = diffuser($name);
+	$img = diffuser($img);
+	$des = diffuser($des);
+	
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("INSERT INTO manage (paarden,img, description) VALUES (:paarden,:img,:description)");
+	$stmt->bindParam(":paarden", $name);
+	$stmt->bindParam(":img", $img);
+	$stmt->bindParam(":description", $des);
+	$stmt->execute();
+	$conn = null;
+
+	header("location:index");
+
+}
 
 
+function xhorseedit($name, $des, $img, $id){
+	$name = diffuser($name);
+	$img = diffuser($img);
+	$des = diffuser($des);
+	
 
-
-
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("UPDATE manage SET paarden = :paarden, description = :description , img = :img  WHERE id = :id");
+	$stmt->bindParam(":paarden", $name);
+	$stmt->bindParam(":img", $img);
+	$stmt->bindParam(":description", $des);
+	$stmt->bindParam(":id", $id);
+	$stmt->execute();
+	$conn = null;
+	header("location:../index");
+}
 
