@@ -38,8 +38,5 @@
 				<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/logout">uitloggen</a>
 				<?php } ?>
     		</form>
-
-
-
 	  	</div>
 	</nav>

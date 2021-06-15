@@ -37,20 +37,38 @@
 	}
 
 	function reservering($horseid, $s_time, $e_time, $email){
+		date_default_timezone_set("Europe/Amsterdam");
+		$reserveringen = getreserveringen();
 
-		$price = ($e_time/60*55);
-		$end_time = date('Y-m-d H:i',strtotime('+'.$e_time.'minutes',strtotime($s_time)));
-			
-		$conn=openDatabaseConnection();
-		$stmt = $conn->prepare("INSERT INTO reserveringen (horseid, b_time, e_time, price,email) VALUES (:horseid,:b_time,:e_time,:price,:email)");
-		$stmt->bindParam(":b_time", $s_time);
-		$stmt->bindParam(":horseid", $horseid);
-		$stmt->bindParam(":e_time", $end_time);
-		$stmt->bindParam(":price", $price);
-		$stmt->bindParam(":email", $email);
-
-		$stmt->execute();
-		$conn = null;
+		if(empty($s_time)){
+			$err[0] = 'U moet een begin tijd invoeren';
+		}elseif(date('Y-m-d H:i', strtotime($s_time)) < $currentime){
+			$err[0] = 'Selecteer een tijd die nog niet is geweest';
+		}else{
+			$end_time = date('Y-m-d H:i',strtotime('+'.$e_time.'minutes',strtotime($s_time)));
+			foreach($reserveringen as $listreserveringen){
+				if(date('Y-m-d H:i', strtotime($s_time)) < $listreserveringen['b_time'] && $end_time < $listreserveringen['b_time']){
+					
+				}elseif(date('Y-m-d H:i', strtotime($s_time)) > $listreserveringen['e_time']){
+					
+				}else{
+					$err[0] = 'Er is al een afspraak op deze tijd';
+				}
+			}
+			if(empty($err[0])){
+				$price = ($e_time/60*55);
+				$conn=openDatabaseConnection();
+				$stmt = $conn->prepare("INSERT INTO reserveringen (horseid, b_time, e_time, price,email) VALUES (:horseid,:b_time,:e_time,:price,:email)");
+				$stmt->bindParam(":b_time", $s_time);
+				$stmt->bindParam(":horseid", $horseid);
+				$stmt->bindParam(":e_time", $end_time);
+				$stmt->bindParam(":price", $price);
+				$stmt->bindParam(":email", $email);
+				$stmt->execute();
+				$conn = null;
+			}
+		}
+		return $err;
 	}
 	
 
@@ -82,8 +100,9 @@ function adduser($email, $pas, $tel, $name){
 	if(empty($name)){
 		$err[3] = 'U moet een username invoeren';
 	}
-	if(!empty($name) && !empty($tel) && !empty($pas) && !empty($email)){
-		if(!empty(checkaccount($email))){
+	$err[0] = checkaccount($email);
+	if(empty($err[0])){
+		if(!empty($name) && !empty($tel) && !empty($pas) && !empty($email)){
 			$email = diffuser($email);
 			$pas = diffuser($pas);
 			$tel = diffuser($tel);
@@ -102,8 +121,9 @@ function adduser($email, $pas, $tel, $name){
 			header("location:index");
 		}else{
 			return $err;
-		}
+		}	
 	}
+	return $err;
 }
 
 function sendlogin($email, $password){
@@ -145,10 +165,23 @@ function checkaccount($email){
 		echo "Connection failed: " . $e->getMessage();
 	}
 
-	foreach($result as $result){
-		if($result['email'] == $email){
-			$check = '1';
+	foreach($result as $results){
+		if($results['email'] == $email){
+			$check = 'This email already exists';
 			return $check;
 		}
 	}
+	echo 'test';
 }
+
+
+
+
+
+
+
+
+
+
+
+

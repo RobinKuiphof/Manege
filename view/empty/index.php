@@ -1,5 +1,5 @@
 <?php 
-echo $_COOKIE['login'];
+
 
 
 if(isset($_GET['logout'])){

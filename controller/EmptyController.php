@@ -17,11 +17,12 @@ function reserveren($id){
         $s_time = $_POST['s_time'];
         $e_time = $_POST['options'];
 
-        reservering($horseid, $s_time, $e_time, $email);
+    $err = reservering($horseid, $s_time, $e_time, $email);
     }
 
 	$connection = checkConnection();
-	render('empty/reserveren', array('horseid' => $id));
+	render('empty/reserveren', array('horseid' => $id,'errorcode' => $err));
+    
 }               
 
 function reserveringen(){
