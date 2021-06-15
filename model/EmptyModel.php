@@ -55,6 +55,7 @@
 	function reservering($horseid, $s_time, $e_time, $email){
 		date_default_timezone_set("Europe/Amsterdam");
 		$reserveringen = getreserveringen();
+		$currentime = date('Y-m-d H:i');
 
 		if(empty($s_time)){
 			$err[0] = 'U moet een begin tijd invoeren';
@@ -88,9 +89,37 @@
 		return $err;
 	}
 
-
+function checkadmin(){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT admin FROM login where email = :email");
+		$stmt->bindParam(":email", $_COOKIE['login']);
+		$stmt->execute();
+		$adminstatus = $stmt->fetch();
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
+	$conn = null;
+	return $adminstatus;
+}
 
 function getreserveringen(){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT * FROM reserveringen INNER JOIN manage ON reserveringen.horseid=manage.id  where email = :email"); //
+		$stmt->bindParam(":email", $_COOKIE['login']);
+		$stmt->execute();
+		$reserveringen = $stmt->fetchAll();
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
+	$conn = null;
+	return $reserveringen;
+}
+
+function adminres(){
 	try {
 		$conn=openDatabaseConnection();
 		$stmt = $conn->prepare("SELECT * FROM reserveringen INNER JOIN manage ON reserveringen.horseid=manage.id"); // where email = :email
@@ -205,7 +234,6 @@ function checkaccount($email){
 			return $check;
 		}
 	}
-	echo 'test';
 }
 
 
@@ -223,7 +251,8 @@ function deletereservering($id){
 function exeupdatereservering2($s_time, $e_time, $id){
 	date_default_timezone_set("Europe/Amsterdam");
 	$reserveringen = getreserveringen();
-
+	$currentime = date('Y-m-d H:i');
+	
 	if(empty($s_time)){
 		$err[0] = 'U moet een begin tijd invoeren';
 	}elseif(date('Y-m-d H:i', strtotime($s_time)) < $currentime){
@@ -290,3 +319,49 @@ function xhorseedit($name, $des, $img, $id){
 	header("location:../index");
 }
 
+function deletehorse2($id){
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("DELETE FROM manage WHERE id = :id");
+	$stmt->bindParam(":id", $id);
+	$stmt->execute();
+	$conn= null;
+}
+
+function accountinfo(){
+	try {
+		$conn=openDatabaseConnection();
+		$stmt = $conn->prepare("SELECT * FROM login where email = :email");
+		$stmt->bindParam(":email", $_COOKIE['login']);
+		$stmt->execute();
+		$accountinfo = $stmt->fetch();
+	}
+	catch(PDOException $e){
+		echo "Connection failed: " . $e->getMessage();
+	}
+	$conn = null;
+	return $accountinfo;
+}
+
+
+function executedelacc(){
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("DELETE FROM login WHERE email = :email");
+	$stmt->bindParam(":email", $_COOKIE['login']);
+	$stmt->execute();
+	$conn= null;
+}
+
+function userchange($name, $tel, $email){
+	
+	$name = diffuser($name);
+	$tel = diffuser($tel);
+	$email = diffuser($email);
+
+	$conn=openDatabaseConnection();
+	$stmt = $conn->prepare("UPDATE login SET email = :email, tel = :tel , username = :name  WHERE email = :email");
+	$stmt->bindParam(":email", $email);
+	$stmt->bindParam(":tel", $tel);
+	$stmt->bindParam(":name", $name);
+	$stmt->execute();
+	$conn = null;
+}

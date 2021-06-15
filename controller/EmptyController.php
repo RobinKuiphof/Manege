@@ -26,7 +26,11 @@ function reserveren($id){
 }               
 
 function reserveringen(){
-    render('empty/reserveringen', array('reservering' => getreserveringen()));
+    if(checkadmin()['admin'] == '1'){
+        render('empty/reserveringen', array('reservering' => adminres()));
+    }else{
+        render('empty/reserveringen', array('reservering' => getreserveringen()));
+    }
 }
 function login(){
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -86,4 +90,33 @@ function edithorse1($id){
         $img = $_POST['img'];
         xhorseedit($name, $des, $img, $id);
     }   
+}
+
+function deletehorse($id){
+    deletehorse2($id);
+    header("location:../index?delete=succesfull");  
+}
+
+function account(){
+
+    render('empty/account', array('accountinfo' => accountinfo()));
+}
+function deleteaccount(){
+    executedelacc();
+    unset($_COOKIE['login']); 
+    setcookie('login', null, -1);
+    header('location:index');
+}
+
+function changeaccount(){
+    render('empty/changeaccount', array('accountinfo' => accountinfo()));
+
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $tel = $_POST['tel'];
+        $email = $_POST['email'];
+        $name = $_POST['name'];
+        userchange($name, $tel, $email);
+        header('location:account');
+    }   
+    
 }

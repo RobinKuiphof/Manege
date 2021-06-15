@@ -1,7 +1,5 @@
 <?php 
-print_r($reservering); 
 $time = date("Y-m-d\TH:i:s", strtotime($reservering['b_time']));
-echo $reservering['orderid'];
 
 ?>
  

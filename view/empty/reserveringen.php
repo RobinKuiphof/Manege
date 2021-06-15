@@ -19,6 +19,12 @@ if(isset($_GET['delete'])){
   
   <? 
   }
+
+if(empty($reservering)){ ?>
+<div class="alert alert-warning" role="alert">
+  <strong>Helaas!</strong> Je hebt nog geen orders open staan ga is heel snel een stukje vlees bestellen dan oetlul.
+</div> 
+<?php }
 foreach ($reservering as $reserv){
 ?>
 <!-- Modal -->
@@ -52,7 +58,7 @@ foreach ($reservering as $reserv){
       </div>
       <div class="modal-footer">
         <a type="button" class="btn btn-secondary" data-dismiss="modal">Annuleer</a>
-        <a href="<?=URL?>empty/delreservering/<?=$reserv["orderid"]?>" type="button" class="btn text-white bg-danger">Verwijderder</a>
+        <a href="<?=URL?>empty/delreservering/<?=$reserv["orderid"]?>" type="button" class="btn text-white bg-danger">Verwijder</a>
       </div>
     </div>
   </div>

@@ -36,6 +36,7 @@
       			<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/login">Login</a>
 				<?php }else{ ?>
 				<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/logout">uitloggen</a>
+				<a class="btn btn-outline-primary my-2 my-sm-0" href="<?=URL?>empty/account">Account</a>
 				<?php } ?>
     		</form>
 	  	</div>
