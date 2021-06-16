@@ -9,6 +9,7 @@ $time = date("Y-m-d\TH:i:s", strtotime($reservering['b_time']));
   <div class="form-group">
     <label for="formGroupExampleInput">Wat moet de begin tijd worden?</label>
     <input type="datetime-local" class="form-control" name="s_time" value="<?=$time?>">
+    
   </div>
   <div class="invalid-feedback d-block"><?=$errorcode[0]?></div>
 

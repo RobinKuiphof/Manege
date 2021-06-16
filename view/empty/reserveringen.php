@@ -22,7 +22,7 @@ if(isset($_GET['delete'])){
 
 if(empty($reservering)){ ?>
 <div class="alert alert-warning" role="alert">
-  <strong>Helaas!</strong> Je hebt nog geen orders open staan ga is heel snel een stukje vlees bestellen dan oetlul.
+  <strong>Helaas!</strong> Je hebt nog geen orders open staan ga is heel snel een stukje vlees bestellen dan minder fijn persoon en geen oetlul.
 </div> 
 <?php }
 foreach ($reservering as $reserv){
@@ -30,12 +30,11 @@ foreach ($reservering as $reserv){
 <!-- Modal -->
 
 <ul class="list-group col-6 m-auto">
-  <a href="detail" style="text-decoration: none;"><li class="list-group-item active"><?echo $reserv["paarden"];?></li></a>
+  <a  style="text-decoration: none;"><li class="list-group-item active"><?echo $reserv["paarden"];?></li></a>
   <li class="list-group-item">Email:<?echo $reserv["email"];?></li>
   <li class="list-group-item">Begin tijd: <?echo $reserv["b_time"];?></li>
   <li class="list-group-item">Eind tijd: <?echo $reserv["e_time"];?></li>
   <li class="list-group-item">Prijs van het paard: <?echo $reserv["price"];?></li>
-  <li class="list-group-item">Order-Id: <?echo $reserv["orderid"];?></li>
 
   <li class="list-group-item">
   <a href="<?=URL?>empty/updatereservering/<?=$reserv['orderid']?>" class="btn  text-white btn-warning">Aanpassen</a>

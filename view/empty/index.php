@@ -14,7 +14,7 @@ if(isset($_GET['logout'])){
 <div class="row">
 <?php foreach($horses as $horse){ ?>
 	<div class="card col-lg-4 col-md-6 col-sm-12">
-	  <img class="card-img-top" src="<?=$horse['img']?>" alt="Card image cap" style="max-height: 500px;"	>
+	  <img class="card-img-top" src="<?=$horse['img']?>" onerror="this.onerror=null;this.src='<?=URL?>images/nohorse.png'" alt="Card image cap" style="max-height: 500px;"	>
 	  <div class="card-body">
 	    <h4 class="card-title"><?=$horse['paarden']?></h4>
 	    <p class="card-text"><?=$horse['description']?></p>

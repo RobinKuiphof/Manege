@@ -69,27 +69,34 @@ function updatereservering($id){
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $newbegintime = $_POST['s_time'];
         $newduration = $_POST['options'];
-        exeupdatereservering2($newbegintime, $newduration, $id);
+        $err = exeupdatereservering2($newbegintime, $newduration, $id);
     }
-    render('empty/updatereserveringen', array('reservering' => $reservering));
+    render('empty/updatereserveringen', array('reservering' => $reservering, 'errorcode' => $err));
 }
 function addhorse(){
-    render('empty/addhorse');
+    if(empty(checkadmin()['admin'])){
+        header("Location:https://www.youtube.com/watch?v=dQw4w9WgXcQ"); 
+    }
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $name = $_POST['name'];
         $des = $_POST['des'];
         $img = $_POST['img'];
-        horseadd($name, $des, $img);
-    }   
+        $err = horseadd($name, $des, $img);
+    }  
+    render('empty/addhorse', array('err' => $err));
 }
 function edithorse1($id){
-    render('empty/edithorse', array('horseinfo' => getHorse($id)));
+    if(empty(checkadmin()['admin'])){
+        header("Location:https://www.youtube.com/watch?v=dQw4w9WgXcQ"); 
+
+    }
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $name = $_POST['name'];
         $des = $_POST['des'];
         $img = $_POST['img'];
-        xhorseedit($name, $des, $img, $id);
+        $err = xhorseedit($name, $des, $img, $id);
     }   
+    render('empty/edithorse', array('horseinfo' => getHorse($id), 'err' => $err));
 }
 
 function deletehorse($id){
@@ -109,14 +116,14 @@ function deleteaccount(){
 }
 
 function changeaccount(){
-    render('empty/changeaccount', array('accountinfo' => accountinfo()));
+    
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $tel = $_POST['tel'];
         $email = $_POST['email'];
         $name = $_POST['name'];
-        userchange($name, $tel, $email);
-        header('location:account');
-    }   
+        $err = userchange($name, $tel, $email);
+    }  
+    render('empty/changeaccount', array('accountinfo' => accountinfo(), 'err' => $err));
     
 }

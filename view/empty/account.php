@@ -1,7 +1,7 @@
 
 
 <ul class="list-group col-6 m-auto">
-  <a href="detail" style="text-decoration: none;"><li class="list-group-item active"><?echo $accountinfo["username"];?></li></a>
+  <a  style="text-decoration: none;"><li class="list-group-item active"><?echo $accountinfo["username"];?></li></a>
   <li class="list-group-item">Email: <?echo $accountinfo["email"];?></li>
   <li class="list-group-item">Telefoon nummer: <?echo $accountinfo["tel"];?></li>
   <li class="list-group-item">Admin: <?echo $accountinfo["admin"];?></li>

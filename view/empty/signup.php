@@ -12,14 +12,14 @@
     <div class="form-group row">
   <label for="example-tel-input" class="col-2 col-form-label">Telefoon</label>
   <div class="col-10">
-    <input name="tel" class="form-control" type="tel"  id="tel" placeholder="Bijvoorbeeld: 06-12345678" value='<?=$_POST['tel']?>'>
+  <input type="tel" id="phone" name="tel" value='<?=$_POST['tel']?>' pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$" required>   
     <div class="invalid-feedback d-block"><?=$err[2]?></div>
 
   </div>
 </div>
 <div class="form-group" >
       <label for="exampleDropdownFormEmail1">Email address</label>
-      <input name="email" type="email" class="form-control" id="email" placeholder="Bijvoorbeeld Jan.Appelboom@gmail.com" value='<?=$_POST['email']?>'>
+      <input name="email" type="text" class="form-control" id="email" placeholder="Bijvoorbeeld Jan.Appelboom@gmail.com" value='<?=$_POST['email']?>'>
       <div class="invalid-feedback d-block"><?=$err[0]?></div>
 
     </div>
